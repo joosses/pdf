@@ -48,3 +48,25 @@ async function generatePdf() {
     });
 }
 generatePdf();
+
+function leerExcel(ruta) {
+    const workbook = XLSX.readFile(ruta);
+    const workbookSheet = workbook.SheetNames;
+
+    const sheet = workbookSheet[0];
+    const dataExcel = XLSX.utils.sheet_to_json(workbook.Sheets[sheet]);
+
+    console.log(dataExcel);
+
+
+    // for (const itemFila of dataExcel){
+    //   console.log(itemFila['Name']);
+    // }
+
+}
+
+
+
+
+leerExcel('nuble.xlsx');
+

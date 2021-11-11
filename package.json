@@ -14,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "handlebars": "^4.7.6",
-    "puppeteer": "^5.5.0"
+    "puppeteer": "^5.5.0",
+    "xlsx": "^0.17.3"
   }
 }
