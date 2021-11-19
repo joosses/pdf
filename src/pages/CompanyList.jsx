@@ -19,14 +19,14 @@ const CompanyList = () => {
     <div>
       <div className="company-title">
         <h1>Lista de compañías</h1>
+        <p><i>*Cada página se abrirá en una nueva pestaña</i></p>
       </div>
 
       <table className="company-table">
         <thead>
           <tr>
             <th>ID</th>
-            <th>Nombre</th>
-            <th>Web</th>
+            <th colSpan="2">Nombre</th>
           </tr>
         </thead>
         <tbody>
@@ -35,8 +35,8 @@ const CompanyList = () => {
                 <td> {data.id} </td>
                 <td> {data.Name} </td>
                 <td>
-                  <Link to={`/${sanitizeName(data.Name)}`} target="_blank">
-                    Ver
+                  <Link className="template-button" to={`/${sanitizeName(data.Name)}`} target="_blank">
+                    Ver Página Web
                   </Link>
                 </td>
               </tr>

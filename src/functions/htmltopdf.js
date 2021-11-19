@@ -16,10 +16,15 @@ const htmltopdf = (getCompanyName) => {
   document.addEventListener("DOMContentLoaded", () => {
     // Escuchamos el click del botón
     const $boton = document.querySelector("#botonCrearPdf");
-
-    $boton.addEventListener("click", () => {
+    
+    $boton.addEventListener("click", async () => {
+      
+      const buttonContainer = document.querySelector(".button-pdf-container");
+      const loadingText = document.createElement("p");
+      loadingText.innerText = "Generando documento. Por favor, espere...";
+      buttonContainer.appendChild(loadingText);
       const $elementoParaConvertir = document.querySelector(".wrapper"); // <-- Aquí puedes elegir cualquier elemento del DOM
-      html2pdf()
+      await html2pdf()
         .set({
           margin: 0.25,
           filename: `${sanitizeName(getCompanyName)}.pdf`,
@@ -43,6 +48,7 @@ const htmltopdf = (getCompanyName) => {
         .from($elementoParaConvertir)
         .save()
         .catch((err) => console.log(err));
+        buttonContainer.removeChild(loadingText);
     });
   });
 };

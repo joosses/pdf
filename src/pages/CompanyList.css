@@ -4,7 +4,7 @@
     box-sizing: border-box;
 }
 
-.company-title h1{
+.company-title h1, .company-title p{
     text-align: center;
 }
 
@@ -13,6 +13,18 @@
 }
 
 .company-table th,.company-table td {
-    padding: 5px 20px;
+    padding: 10px 20px;
     border: 1px solid gray;
+}
+
+.template-button {
+    padding: 3px 10px;
+    /* border: 1px solid gray; */
+    border-radius: 7px;
+    background-color: green;
+    color: white;
+}
+
+.template-button:hover {
+    color: white;
 }
