@@ -1,0 +1,30 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.company-title h1, .company-title p{
+    text-align: center;
+}
+
+.company-table {
+    margin: 0 auto;
+}
+
+.company-table th,.company-table td {
+    padding: 10px 20px;
+    border: 1px solid gray;
+}
+
+.template-button {
+    padding: 3px 10px;
+    /* border: 1px solid gray; */
+    border-radius: 7px;
+    background-color: green;
+    color: white;
+}
+
+.template-button:hover {
+    color: white;
+}
