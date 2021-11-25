@@ -72,7 +72,8 @@ export default function SvgGallery(){
     <h1>🔥 This Gallery Is Lit 🔥</h1>
     <div className="galler
     y-grid">
-      {imgUrls.length ? (<RenderImgs imgUrls={imgUrls}></RenderImgs>) :(<NoImgs handleShow={handleShow}></NoImgs>)} 
+      {imgUrls.length ? (<RenderImgs imgUrls={imgUrls}></RenderImgs>)
+      :(<NoImgs handleShow={handleShow}></NoImgs>)} 
     </div>
 
     <UploadFileModal show={show} handleClose={handleClose}></UploadFileModal>

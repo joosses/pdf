@@ -3,7 +3,7 @@ import express, { urlencoded,json } from "express";
 import {join} from 'path';
 import fileUpload from 'express-fileupload';
 const app = express();
-import {readdirSync} from 'fs'
+import {readdirSync,readFileSync,writeFileSync} from 'fs'
 import morgan from 'morgan'
 import {Helper} from '../helpers/dxf2svg/index'
 import cors from 'cors'
@@ -14,9 +14,8 @@ app.use('/public', express.static(join(__dirname, 'public')))
 app.use(urlencoded({extended:true}))
 app.use(json())
 app.use(fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 },
-    debug:true
-  }));
+    limits: { fileSize: 50 * 1024 * 1024 },    
+}));
 
 
 //GLOBALS
@@ -29,35 +28,33 @@ console.log(__dirname)
 
 
 //ROUTES
-app.post("/upload",(req,res)=>{
+app.post("/upload",async (req,res)=>{
     
-    if(req.files != undefined && req.files.length){
+    console.log(req.files)
+
+    if(req.files != undefined){
+        console.log("Asasd")
+  
         
         const files = req.files;
+       // console.log(files)
         const errors =[]
-        files.forEach(file => {
+        for(let index in files) {
             /* try {
             } catch (error) {
                 errors.push(error.message);
             } */
-            file.mv(join(__dirname,"dxf"));
+            
+            const fileName=files[index].name;
+            const filePath = join(app.get("DXF_PATH"),fileName)
+            await files[index].mv(filePath);
 
             //create other formats
-            const helper = new Helper(file.data, 'utf-8')
-            
-            try {
-              const svg = helper.toSVG()
-              const svgFileName = `${fileName.split(".")[0]}.svg`; //name of the new svg file
+            const dxfFile = readFileSync(filePath);
 
-              fs.writeFileSync(join(app.get("PATH_SVG"), `${svgFileName}`), svg, 'utf-8')
-            
-                console.log(join(SVGDIR,svgFileName)+' SVG written') 
-            
-            } catch (error) {
-              console.log(error)
-            }
+           console.log(dxfFile)
 
-        });
+        }
 
         return errors.length ? res.json({errors:errors}) : res.json({ok:true});
     }
