@@ -6,7 +6,7 @@ import dataJson from "../resources/data.json";
 import Template from "../pages/Template";
 import { sanitize } from "string-sanitizer";
 import replaceSpecialCharacters from "replace-special-characters";
-
+import SvgGallery from "../pages/Dxf";
 const App = () => {
   const sanitizeName = (name) => {
     name = replaceSpecialCharacters(name);
@@ -24,6 +24,7 @@ const App = () => {
             exact path="/"
             render={() => <CompanyList /> }
           />
+          <Route path="/gallery" render={()=><SvgGallery></SvgGallery>}></Route>
         </Switch>
         
         <Switch>
