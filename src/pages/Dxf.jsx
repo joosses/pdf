@@ -1,6 +1,6 @@
-import React,{useState,useEffect} from "react"
+import React, { useState, useEffect } from "react";
 
-import "./dxf.css"
+import "./dxf.css";
 
 //import {Helper} from '../functions/dxfhelper/index'
 
@@ -10,77 +10,96 @@ import "./dxf.css"
 
 /* const imgUrls = ['https://source.unsplash.com/PC_lbSSxCZE/800x600','https://source.unsplash.com/lVmR1YaBGG4/800x600','https://source.unsplash.com/5KvPQc1Uklk/800x600','https://source.unsplash.com/GtYFwFrFbMA/800x600','https://source.unsplash.com/Igct8iZucFI/800x600','https://source.unsplash.com/M01DfkOqz7I/800x600','https://source.unsplash.com/MoI_cHNcSK8/800x600','https://source.unsplash.com/M0WbGFRTXqU/800x600','https://source.unsplash.com/s48nn4NtlZ4/800x600','https://source.unsplash.com/E4944K_4SvI/800x600','https://source.unsplash.com/F5Dxy9i8bxc/800x600','https://source.unsplash.com/iPum7Ket2jo/800x600'
 ]; */
-import { UploadFileModal,UploadButton } from "../components/UploadFile"
+import { UploadFileModal, UploadButton } from "../components/UploadFile";
 
-export default function SvgGallery(){
+export default function SvgGallery() {
+  const [imgUrls, setImgUrls] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(-1);
+  const [show, setShow] = useState(false);
 
-    const [imgUrls,setImgUrls] = useState([])
-    const [currentIndex,setCurrentIndex] =useState(1)
-    const [show, setShow] = useState(false);
-      
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-    useEffect(async ()=>{
+  useEffect(async () => {
+    try {
+      const resp = await fetch("http://localhost:3002/svg/get");
+      const data = await resp.json();
+      setImgUrls(data.svgs.map((x) => "http://localhost:3002/" + x));
+      console.log("IMAGE URLS", imgUrls);
+    } catch (error) {
+      console.log(error.message);
+    }
+  }, []);
 
-      try {
-        
-        const request = await fetch("http://localhost:3002/svg/get",);
-        
-        setImgUrls(request.json());
-        console.log(imgUrls)
-      } catch (error) {
-        console.log(error.message)
-      }
-    },[])
-   
-    function renderImageContent(src, index) {
-      console.log(src)
-        return (
-          <div onClick={(e) => openModal(e, index)}>
-            <img src={src} key={src} />
-          </div>
-        ) 
-      }
-     function openModal(e, index) {
-       console.log(index)
-        setCurrentIndex(index)
-      }
-      function closeModal(e) {
-        
-        if (e != undefined) {
-          e.preventDefault();
-        }
-        setCurrentIndex(null)
-      }
-      function findPrev(e) {
-        if (e != undefined) {
-          e.preventDefault();
-        }
+  function renderImageContent(src, index) {
+    console.log(src);
+    return (
+      <div onClick={(e) => openModal(e, index)}>
+        <img src={src} key={src} />
+      </div>
+    );
+  }
+  function openModal(e, index) {
+    console.log(index);
+    setCurrentIndex(index);
+  }
+  function closeModal(e) {
+    if (e != undefined) {
+      e.preventDefault();
+    }
+    setCurrentIndex(null);
+  }
+  function findPrev(e) {
+    if (e != undefined) {
+      e.preventDefault();
+    }
 
-        setCurrentIndex(prevState => (prevState-1))
-        
-      }
-      function findNext(e) {
-        if (e != undefined) {
-          e.preventDefault();
-        }
-        setCurrentIndex(prevState => (prevState+1))
+    setCurrentIndex((prevState) => prevState - 1);
+  }
+  function findNext(e) {
+    if (e != undefined) {
+      e.preventDefault();
+    }
+    setCurrentIndex((prevState) => prevState + 1);
+  }
 
-      }
-    return (<div className="gallery-container">
-    <h1>🔥 This Gallery Is Lit 🔥</h1>
-    <div className="galler
-    y-grid">
-      {imgUrls.length ? (<RenderImgs imgUrls={imgUrls}></RenderImgs>)
-      :(<NoImgs handleShow={handleShow}></NoImgs>)} 
+  function hasNext(e) {
+    if (e != undefined) {
+      e.preventDefault();
+    }
+    return true;
+  }
+
+  function hasPrev(e) {
+    if (e != undefined) {
+      e.preventDefault();
+    }
+    return true;
+  }
+  return (
+    <div className="gallery-container">
+      <h1>🔥 This Gallery Is Lit 🔥</h1>
+      <div
+        className="galler y-grid"
+      >
+        {imgUrls.length ? (
+          <RenderImgs imgUrls={imgUrls} openModal={openModal}></RenderImgs>
+        ) : (
+          <NoImgs handleShow={handleShow}></NoImgs>
+        )}
+      </div>
+      <GalleryModal
+        closeModal={closeModal}
+        hasNext={hasNext}
+        hasPrev={hasPrev}
+        findNext={findNext}
+        findPrev={findPrev}
+        src={imgUrls[currentIndex]}
+      ></GalleryModal>
+      <UploadFileModal show={show} handleClose={handleClose}></UploadFileModal>
     </div>
-
-    <UploadFileModal show={show} handleClose={handleClose}></UploadFileModal>
-  </div>)
+  );
 }
-
-
 
 class GalleryModal extends React.Component {
   constructor() {
@@ -88,74 +107,80 @@ class GalleryModal extends React.Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
   }
   componentDidMount() {
-    document.body.addEventListener('keydown', this.handleKeyDown);
-  }  
+    document.body.addEventListener("keydown", this.handleKeyDown);
+  }
   componentWillUnMount() {
-    document.body.removeEventListener('keydown', this.handleKeyDown);
+    document.body.removeEventListener("keydown", this.handleKeyDown);
   }
   handleKeyDown(e) {
-    if (e.keyCode === 27)
-      this.props.closeModal();
-    if (e.keyCode === 37 && this.props.hasPrev)
-      this.props.findPrev();
-    if (e.keyCode === 39 && this.props.hasNext)
-      this.props.findNext();
+    if (e.keyCode === 27) this.props.closeModal();
+    if (e.keyCode === 37 && this.props.hasPrev) this.props.findPrev();
+    if (e.keyCode === 39 && this.props.hasNext) this.props.findNext();
   }
-  
-  render () {
-    console.log(src)
+
+  render() {
     const { closeModal, hasNext, hasPrev, findNext, findPrev, src } = this.props;
+    console.log(src);
     if (!src) {
-      console.log('whut')
+      console.log("whut");
       return null;
     }
     return (
       <div>
         <div className="modal-overlay" onClick={closeModal}>
-
-        <div  className="_modal">
-          <div className='modal-body'>
-            <a href="#" className='modal-close' onClick={closeModal} onKeyDown={this.handleKeyDown}>&times;</a>
-            {hasPrev && <a href="#" className='modal-prev' onClick={findPrev} onKeyDown={this.handleKeyDown}>&lsaquo;</a>}
-            {hasNext && <a href="#" className='modal-next' onClick={findNext} onKeyDown={this.handleKeyDown}>&rsaquo;</a>}
-            <img src={src} />
+          <div className="_modal">
+            <div className="modal-body">
+              <a href="#" className="modal-close" onClick={closeModal} onKeyDown={this.handleKeyDown}>
+                &times;
+              </a>
+              {hasPrev && (
+                <a href="#" className="modal-prev" onClick={findPrev} onKeyDown={this.handleKeyDown}>
+                  &lsaquo;
+                </a>
+              )}
+              {hasNext && (
+                <a href="#" className="modal-next" onClick={findNext} onKeyDown={this.handleKeyDown}>
+                  &rsaquo;
+                </a>
+              )}
+              <img src={src} />
+            </div>
           </div>
         </div>
-        </div>
-       
       </div>
-    )
+    );
   }
 }
 
-
-function NoImgs({handleShow}){
-
-  return (<div
-    style={{
-      display:"flex",
-      height:"100vh",
-      marginTop:"10%",
-      justifyContent:"center"
-    }}
-    
-  >
-    <div>
-    <p>No tienes ninguna Imagen</p>
-  <UploadButton handleShow={handleShow}></UploadButton>
+function NoImgs({ handleShow }) {
+  return (
+    <div
+      style={{
+        display: "flex",
+        height: "100vh",
+        marginTop: "10%",
+        justifyContent: "center",
+      }}
+    >
+      <div>
+        <p>No tienes ninguna Imagen</p>
+        <UploadButton handleShow={handleShow}></UploadButton>
+      </div>
     </div>
-  </div>)
+  );
 }
 
-
-function  RenderImgs({imgUrls}){
+function RenderImgs({ imgUrls, openModal }) {
   return (
-    <div>
-      {imgUrls.map((src,index)=>(
-        <div onClick={(e) => openModal(e, index)}>
+    <div className="gallery-container">
+      <div className="gallery-grid">
+        {imgUrls.map((src, index) => (
+          <div key={index} onClick={(e) => openModal(e, index)}>
+            <h4>{src.substring(src.lastIndexOf('/') + 1)}</h4>
             <img src={src} key={src} />
-          </div>))
-      }
+          </div>
+        ))}
+      </div>
     </div>
-  )
+  );
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
+  preserveAspectRatio="xMinYMin meet"
+  viewBox="-10 -10 20 9.999999999999998"
+  width="100%" height="100%"
+>
+  <g stroke="#000000" stroke-width="0.1%" fill="none" transform="matrix(1,0,0,-1,0,0)">
+    <g stroke="rgb(0, 0, 0)">
+  <path d="M 10 4.440892098500626e-15 A 10 10 -90 0 1 -10 1.224646799147353e-15" />
+</g>
+  </g>
+</svg>
